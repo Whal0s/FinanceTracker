@@ -25,7 +25,12 @@ Why is this project of interest to you?
 As a computer science and business combined major, I have been learning financial accounting which has been very new and interesting to me. I thought about the applications of how you might receive cash before after engaging in a business activity so I wanted to apply these concepts in my computer science learning.
 
 
-
+## USER STORIES
+- As a user, I want to be able to add a bill or deposit (financial tracker) into my personal tracker.
+- As a user, I want to be able to view a list of all my deposits and bills.
+- As a user, I want to be able to mark a financial entry as either planned or unplanned.
+- As a user, I want to be able to delete or edit previous financial entries.
+- As a user, I want to be able to see the amount each financial each entry either increased or decreased my overall balance by.
 
 
 
