@@ -1,6 +1,6 @@
-package model;
+package ui;
 
 
 public class FinanceTrackerApp {
-
+    
 }
