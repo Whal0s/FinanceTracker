@@ -11,10 +11,10 @@ public class FinancialEntry {
 
     private String title;
     private TransactionType type; 
-    private Integer amount;
+    private int amount;
     private Boolean wasPlanned;
 
-    public FinancialEntry(String title,TransactionType type, Integer amount, Boolean wasPlanned) {
+    public FinancialEntry(String title,TransactionType type, int amount, Boolean wasPlanned) {
         this.title = title;
         this.type = type;
         this.amount = amount;
@@ -40,11 +40,11 @@ public class FinancialEntry {
     }
 
     // Getter and Setter for amount
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
