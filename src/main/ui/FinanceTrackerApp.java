@@ -228,6 +228,7 @@ public class FinanceTrackerApp {
         }
     }
 
+    // EFFECTS Choose entry to view
     public void viewEntry() {
         System.out.println("------------------------------------------");
         System.out.println("Type the number of the entry you want to edit (or 0 to go back):");
@@ -257,6 +258,7 @@ public class FinanceTrackerApp {
         userEntries();
     }
 
+    // EFFECTS: Shows Entry contents
     public void viewSpecificEntry(FinancialEntry entry) {
         System.out.println("------------------------------------------");
         System.out.println("Title: " + entry.getTitle());
