@@ -97,12 +97,33 @@ public class FinanceTrackerApp {
         String command = input.next();
         command = command.toLowerCase();
 
+        Boolean isValid = false;
+
         for (User user : users) {
-            if (user.getName() == command) {
-                
+            if (command.equals(user.getName())) {
+                selectedUser = user;
+                isValid = true;
 
             }
         }
 
+        if(isValid) {
+            enterUser();
+        } else {
+            System.out.println("You have not typed a valid user. Please try again.");
+            enterUserChoice();
+        }
+
     }
+
+
+    public void enterUser() {
+        System.out.println("You are now in the financial account of: " + selectedUser.getName());
+        System.out.println(selectedUser.getName() + " has a balance of " + selectedUser.getBalance());
+
+
+    }
+
+
+
 }
