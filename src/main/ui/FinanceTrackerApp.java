@@ -149,6 +149,7 @@ public class FinanceTrackerApp {
 
     // EFFECTS: Shows selected users balance and name
     public void enterUser() {
+        System.out.println("------------------------------------------");
         System.out.println("You are now in the financial account of: " + selectedUser.getName());
         System.out.println(selectedUser.getName() + " has a balance of " + selectedUser.getBalance());
 
@@ -184,10 +185,12 @@ public class FinanceTrackerApp {
         List<String> entries = selectedUser.getEntryTitles();
 
         if (entries.size() == 0) {
+            System.out.println("------------------------------------------");
             System.out.println("This user has no financial entries which is why their balance is 0");
 
         } else {
-
+            System.out.println("------------------------------------------");
+            System.out.println("Here are the following entries:");
             for (String title : entries) {
                 System.out.println("- " + title);
 
@@ -204,7 +207,7 @@ public class FinanceTrackerApp {
     public void userEntriesChoices() {
         System.out.println("------------------------------------------");
         System.out.println(
-                "Do you want to (a) add an entry, (b) delete an entry, (c) edit an entry, (d) return to user page?");
+                "Do you want to (a) add, (b) view, (c) delete, (d) edit, (e) return to user page?");
 
         String command = input.next();
         command = command.toLowerCase();
@@ -212,10 +215,12 @@ public class FinanceTrackerApp {
         if (command.equals("a")) {
             addUserEntry();
         } else if (command.equals("b")) {
-            deleteUserEntry();
+            viewEntry();
         } else if (command.equals("c")) {
-            editUserEntry();
+            deleteUserEntry();
         } else if (command.equals("d")) {
+            editUserEntry();
+        } else if (command.equals("e")) {
             enterUser();
         } else {
             System.out.println("You have not inputed a valid command, please try again");
@@ -223,9 +228,68 @@ public class FinanceTrackerApp {
         }
     }
 
+    public void viewEntry() {
+        System.out.println("------------------------------------------");
+        System.out.println("Type the number of the entry you want to edit (or 0 to go back):");
+
+        if (input.hasNextInt()) {
+            int index = input.nextInt();
+
+            if (index == 0) {
+                userEntries();
+                return;
+            }
+
+            if (index >= 1 && index <= selectedUser.getHistory().size()) {
+                viewSpecificEntry(selectedUser.getEntry(index));
+
+            } else {
+                System.out.println("Invalid number. Please try again.");
+                editUserEntry();
+                return;
+            }
+        } else {
+            input.next();
+            System.out.println("Not a number. Please try again.");
+            editUserEntry();
+            return;
+        }
+        userEntries();
+    }
+
+    public void viewSpecificEntry(FinancialEntry entry) {
+        System.out.println("------------------------------------------");
+        System.out.println("Title: " + entry.getTitle());
+
+        String type;
+        if (entry.getType().equals(TransactionType.DEPOSIT)) {
+            type = "Deposit";
+
+        } else {
+            type = "Withdrawal";
+        }
+
+        System.out.println("Transaction Type: " + type);
+
+        System.out.println("Amount: " + entry.getAmount());
+
+        String wasPlanned;
+        if (entry.getWasPlanned()) {
+            wasPlanned = "was planned";
+
+        } else {
+            wasPlanned = "was unplanned";
+        }
+
+        System.out.println("This entry " + wasPlanned);
+
+        userEntries();
+    }
+
     // MODIFIES: THIS, USER
     // EFFECTS: Adds a financial entry to selected user
     public void addUserEntry() {
+        System.out.println("------------------------------------------");
         System.out.println("What is the title of your entry?");
         String title = input.next();
 
@@ -334,7 +398,6 @@ public class FinanceTrackerApp {
     // EFFECTS: select an entry from user history and modify it.
     public void editUserEntry() {
         System.out.println("------------------------------------------");
-        System.out.println("Here are this user's entries:");
         System.out.println("Type the number of the entry you want to edit (or 0 to go back):");
 
         if (input.hasNextInt()) {
@@ -363,7 +426,8 @@ public class FinanceTrackerApp {
     }
 
     // MODIFIES: THIS, FinancialEntry
-    // EFFECTS: helper function to update the specific fields of the selected financial entry
+    // EFFECTS: helper function to update the specific fields of the selected
+    // financial entry
     public void updateEntry(FinancialEntry entry) {
         System.out.println("Enter the new title:");
         String newTitle = input.next();
