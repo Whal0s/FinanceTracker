@@ -1,20 +1,18 @@
 package model;
 
 public class FinancialEntry {
-    
-    
+
     public enum TransactionType {
         DEPOSIT,
         WITHDRAWAL
     }
 
-
     private String title;
-    private TransactionType type; 
+    private TransactionType type;
     private int amount;
     private Boolean wasPlanned;
 
-    public FinancialEntry(String title,TransactionType type, int amount, Boolean wasPlanned) {
+    public FinancialEntry(String title, TransactionType type, int amount, Boolean wasPlanned) {
         this.title = title;
         this.type = type;
         this.amount = amount;

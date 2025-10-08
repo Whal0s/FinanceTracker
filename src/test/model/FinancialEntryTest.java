@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test;
 import model.FinancialEntry.TransactionType;
 
 public class FinancialEntryTest {
-    
+
     private FinancialEntry f1;
     private FinancialEntry f2;
     private FinancialEntry f3;
-    
+
     @BeforeEach
     void runBefore() {
         f1 = new FinancialEntry("Hospital fee", TransactionType.WITHDRAWAL, 3000, false);
@@ -45,9 +45,11 @@ public class FinancialEntryTest {
 
     @Test
     void testSetWasPlanned() {
-        assertFalse(f1.getWasPlanned());;
+        assertFalse(f1.getWasPlanned());
+        ;
         f1.setWasPlanned(true);
-        assertTrue(f1.getWasPlanned());;
+        assertTrue(f1.getWasPlanned());
+        ;
     }
 
 }

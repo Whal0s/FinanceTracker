@@ -64,14 +64,13 @@ public class User {
     // EFFECTS: delete the entry at the index of history
     public void deleteEntry(int index) {
         if (history.get(index - 1).getType() == TransactionType.DEPOSIT) {
-                this.overallBalance -= history.get(index - 1).getAmount();
-            } else {
-                this.overallBalance += history.get(index - 1).getAmount();
-            }
-        
+            this.overallBalance -= history.get(index - 1).getAmount();
+        } else {
+            this.overallBalance += history.get(index - 1).getAmount();
+        }
+
         history.remove(index - 1);
 
-        
     }
 
 }
