@@ -22,6 +22,7 @@ public class FinanceTrackerApp {
         welcome();
     }
 
+    // EFFECTS: Main welcome function
     private void welcome() {
         System.out.println("------------------------------------------");
         System.out.println("Welcome to my finance tracker console app!");
@@ -30,6 +31,7 @@ public class FinanceTrackerApp {
 
     }
 
+    // EFFECTS: Enter the main menu and show users if there are any
     private void mainMenu() {
         if (users.size() == 0) {
             System.out.println("------------------------------------------");
@@ -49,6 +51,7 @@ public class FinanceTrackerApp {
         }
     }
 
+    // EFFECTS: Make a decision from the main menu to enter more functionality
     private void mainMenuChoices() {
         System.out.println("------------------------------------------");
         System.out.println("Do you want to (a) create a new user, (b) delete a user, (c) enter a user account?");
@@ -68,6 +71,8 @@ public class FinanceTrackerApp {
         }
     }
 
+    // MODIFIES: THIS
+    // EFFECTS: Create a new user to be added to users
     private void createUser() {
         System.out.println("------------------------------------------");
         System.out.println("What will your user's name be?");
@@ -91,21 +96,21 @@ public class FinanceTrackerApp {
         }
     }
 
+    // MODIFIES: THIS
+    // EFFECTS: Delete a specific user from users
     private void deleteUser() {
         System.out.println("Please type the name of the user whose account you want to delete:");
 
         String command = input.next();
         User userToDelete = null;
 
-        // Find the matching user
         for (User user : users) {
             if (command.equals(user.getName())) {
                 userToDelete = user;
-                break; // stop once we find the user
+                break;
             }
         }
 
-        // If found, remove them
         if (userToDelete != null) {
             users.remove(userToDelete);
             System.out.println("User \"" + userToDelete.getName() + "\" deleted successfully.");
@@ -113,9 +118,11 @@ public class FinanceTrackerApp {
             System.out.println("Not a valid user.");
         }
 
-        mainMenu(); // go back to main menu
+        mainMenu();
     }
 
+    // MODIFIES: THIS
+    // EFFECTS: takes users input to enter the account of a the selected user
     private void enterUserChoice() {
         System.out.println("Please type the name of the user whose account you want to check:");
 
@@ -140,6 +147,7 @@ public class FinanceTrackerApp {
 
     }
 
+    // EFFECTS: Shows selected users balance and name
     public void enterUser() {
         System.out.println("You are now in the financial account of: " + selectedUser.getName());
         System.out.println(selectedUser.getName() + " has a balance of " + selectedUser.getBalance());
@@ -148,6 +156,9 @@ public class FinanceTrackerApp {
 
     }
 
+    // MODIFIES: THIS
+    // EFFECTS: Gives the option to select actions related to user including check
+    // entries or return to meny
     public void userChoices() {
         System.out.println("------------------------------------------");
         System.out.println("Do you want to (a) check user entries, (b) return to the menu?");
@@ -167,6 +178,7 @@ public class FinanceTrackerApp {
 
     }
 
+    // EFFECTS: Shows all selected user entries
     public void userEntries() {
 
         List<String> entries = selectedUser.getEntryTitles();
@@ -186,6 +198,9 @@ public class FinanceTrackerApp {
 
     }
 
+    // EFFECTS: Shows actions user can do after entering the entry section of a
+    // user. They can (a) add an entry, (b) delete an entry, (c) edit an entry, (d)
+    // return to user page?
     public void userEntriesChoices() {
         System.out.println("------------------------------------------");
         System.out.println(
@@ -208,6 +223,8 @@ public class FinanceTrackerApp {
         }
     }
 
+    // MODIFIES: THIS, USER
+    // EFFECTS: Adds a financial entry to selected user
     public void addUserEntry() {
         System.out.println("What is the title of your entry?");
         String title = input.next();
@@ -225,6 +242,8 @@ public class FinanceTrackerApp {
         userEntries();
     }
 
+    // EFFECTS: helper function to get an TransactionType back to the entry creation
+    // function
     public TransactionType getEntryType() {
         System.out.println("------------------------------------------");
         System.out.println("Is this a (a) deposit or (b) withdrawal?");
@@ -240,6 +259,7 @@ public class FinanceTrackerApp {
         }
     }
 
+    // EFFECTS: helper function to get a number back to the entry creation function
     public int getUserAmount() {
         System.out.println("------------------------------------------");
         System.out.println("What is the amount? (enter a whole number)");
@@ -260,6 +280,8 @@ public class FinanceTrackerApp {
         }
     }
 
+    // EFFECTS: helper function to get a was planned boolean to the entry creation
+    // function
     public boolean wasPlanned() {
         System.out.println("------------------------------------------");
         System.out.println("Was this planned? (y/n)");
@@ -276,6 +298,7 @@ public class FinanceTrackerApp {
         }
     }
 
+    // EFFECTS: delete a specific entry based on the index inputted
     public void deleteUserEntry() {
         System.out.println("------------------------------------------");
 
@@ -307,10 +330,11 @@ public class FinanceTrackerApp {
         userEntries();
     }
 
+    // MODIFIES: THIS, USER, FINANCIAL ENTRY
+    // EFFECTS: select an entry from user history and modify it.
     public void editUserEntry() {
         System.out.println("------------------------------------------");
         System.out.println("Here are this user's entries:");
-
         System.out.println("Type the number of the entry you want to edit (or 0 to go back):");
 
         if (input.hasNextInt()) {
@@ -322,35 +346,38 @@ public class FinanceTrackerApp {
             }
 
             if (index >= 1 && index <= selectedUser.getHistory().size()) {
-                FinancialEntry entry = selectedUser.getEntry(index);
+                updateEntry(selectedUser.getEntry(index));
 
-                System.out.println("Enter the new title:");
-                String newTitle = input.next();
-                entry.setTitle(newTitle);
-
-                TransactionType newType = getEntryType();
-                entry.setType(newType);
-
-                int newAmount = getUserAmount();
-                entry.setAmount(newAmount);
-
-                boolean newPlanned = wasPlanned();
-                entry.setWasPlanned(newPlanned);
-
-                System.out.println("Entry updated.");
             } else {
                 System.out.println("Invalid number. Please try again.");
                 editUserEntry();
                 return;
             }
         } else {
-            input.next(); // consume bad token
+            input.next();
             System.out.println("Not a number. Please try again.");
             editUserEntry();
             return;
         }
-
         userEntries();
     }
 
+    // MODIFIES: THIS, FinancialEntry
+    // EFFECTS: helper function to update the specific fields of the selected financial entry
+    public void updateEntry(FinancialEntry entry) {
+        System.out.println("Enter the new title:");
+        String newTitle = input.next();
+        entry.setTitle(newTitle);
+
+        TransactionType newType = getEntryType();
+        entry.setType(newType);
+
+        int newAmount = getUserAmount();
+        entry.setAmount(newAmount);
+
+        boolean newPlanned = wasPlanned();
+        entry.setWasPlanned(newPlanned);
+
+        System.out.println("Entry updated.");
+    }
 }
