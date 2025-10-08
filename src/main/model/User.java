@@ -16,11 +16,11 @@ public class User {
     }
 
     public String getName() {
-        return "";
+        return this.name;
     }
 
     public int getBalance() {
-        return 0;
+        return overallBalance;
     }
 
 
@@ -29,15 +29,21 @@ public class User {
         return null;
     }
 
+    //EFFECTS: Returns a single entry !You must -1 the user input index
     public FinancialEntry getEntry(int i) {
 
         return null;
     }
 
+    //EFFECTS: Returns history - THIS FUNCTION IS FOR TESTING!
+    public List<FinancialEntry> getHistory() {
+        return history;
+    }
+
     //MODIFIES: THIS
     //EFFECTS: Adds new entry to end of history
     public void addEntry(FinancialEntry entry) {
-
+        this.history.add(entry);
     }
 
 

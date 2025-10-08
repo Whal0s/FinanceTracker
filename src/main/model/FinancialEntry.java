@@ -57,7 +57,4 @@ public class FinancialEntry {
         this.wasPlanned = wasPlanned;
     }
 
-
-
-
 }
