@@ -24,9 +24,9 @@ public class FinancialEntryTest {
 
     @Test
     void testSetTitle() {
-        assertEquals("Hospital fee" , f1.getTitle());
+        assertEquals("Hospital fee", f1.getTitle());
         f1.setTitle("Coldplay Concert");
-        assertEquals("Coldplay Concert" , f1.getTitle());
+        assertEquals("Coldplay Concert", f1.getTitle());
     }
 
     @Test

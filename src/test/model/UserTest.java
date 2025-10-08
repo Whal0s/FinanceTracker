@@ -51,8 +51,9 @@ public class UserTest {
         u1.addEntry(f3);
 
         List<String> list = new ArrayList<>();
-        list.add("s1");
-        list.add("s2");
+        list.add("Hospital fee");
+        list.add("June Income");
+        list.add("June Groceries");
         assertEquals(list, u1.getEntryTitles());
     }
 
@@ -61,16 +62,20 @@ public class UserTest {
         u1.addEntry(f1);
         u1.addEntry(f2);
         u1.addEntry(f3);
+        assertEquals(1600, u1.getBalance());
+
         u1.deleteEntry(1);
+        assertEquals(4600 , u1.getBalance());
         assertEquals(f2, u1.getHistory().get(0));
         assertEquals(f3, u1.getHistory().get(1));
+
     }
 
     @Test
     void testGetBalance() {
         u1.addEntry(f1);
         u1.addEntry(f2);
-        assertEquals(2000 , u1.getBalance());
+        assertEquals(2000, u1.getBalance());
     }
 
 
