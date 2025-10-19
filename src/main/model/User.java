@@ -5,6 +5,8 @@ import java.util.List;
 
 import model.FinancialEntry.TransactionType;
 
+// Represents a single user whose financial state we want to track. Made up of financial entries which 
+// contribute to the overall balance.
 public class User {
 
     private String name;

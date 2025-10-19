@@ -1,5 +1,7 @@
 package model;
 
+// Represents a singular financial entry that will be stored in a user's history.
+// A financial entry can be a deposit or withdrawal for a certain amount.
 public class FinancialEntry {
 
     public enum TransactionType {

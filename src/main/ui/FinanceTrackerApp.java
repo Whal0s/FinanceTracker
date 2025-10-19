@@ -8,6 +8,8 @@ import model.User;
 import model.FinancialEntry;
 import model.FinancialEntry.TransactionType;
 
+// Represents the overall app system. Stores a list of users which you can perform operations on 
+// including viewing, delete or editing their financial entries
 public class FinanceTrackerApp {
 
     private Scanner input;
