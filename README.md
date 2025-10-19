@@ -31,6 +31,8 @@ As a computer science and business combined major, I have been learning financia
 - As a user, I want to be able to mark a financial entry as either planned or unplanned.
 - As a user, I want to be able to delete or edit previous financial entries.
 - As a user, I want to be able to see the amount each financial each entry either increased or decreased my overall balance by.
+- As a user, I want to be able to save the entire state of my finance tracker app to file (if I so choose)
+- As a user, I want to be able to be able to load a previous state of my finance app from file (if I so choose)
 
 
 
