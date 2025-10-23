@@ -2,6 +2,8 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 
+import ca.ubc.cs.ExcludeFromJacocoGeneratedReport;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import model.FinancialEntry.TransactionType;
 
+@ExcludeFromJacocoGeneratedReport
 public class UserTest {
 
     private User u1;

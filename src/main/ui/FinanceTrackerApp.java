@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import ca.ubc.cs.ExcludeFromJacocoGeneratedReport;
 import model.User;
 import model.FinancialEntry;
 import model.FinancialEntry.TransactionType;
 
 // Represents the overall app system. Stores a list of users which you can perform operations on 
 // including viewing, delete or editing their financial entries
+@ExcludeFromJacocoGeneratedReport
 public class FinanceTrackerApp {
 
     private Scanner input;
