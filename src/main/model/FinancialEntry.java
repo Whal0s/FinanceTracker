@@ -14,6 +14,8 @@ public class FinancialEntry {
     private int amount;
     private Boolean wasPlanned;
 
+    // MODIFIES: THIS
+    // EFFECTS: Initializes Financial entry with set title type amount and was planned boolean
     public FinancialEntry(String title, TransactionType type, int amount, Boolean wasPlanned) {
         this.title = title;
         this.type = type;

@@ -13,6 +13,8 @@ public class User {
     private int overallBalance;
     private List<FinancialEntry> history;
 
+    // MODIFIES: THIS
+    // EFFECTS: Initializes user with name and overall balance set to zero
     public User(String name) {
         this.name = name;
         overallBalance = 0;
@@ -25,6 +27,10 @@ public class User {
 
     public int getBalance() {
         return overallBalance;
+    }
+
+    public void setBalancePlus(int number) {
+        this.overallBalance += number;
     }
 
     // EFFECTS: Returns list of all titles in history

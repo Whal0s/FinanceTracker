@@ -67,6 +67,10 @@ public class UserTest {
         assertEquals(f2, u1.getHistory().get(0));
         assertEquals(f3, u1.getHistory().get(1));
 
+        u1.deleteEntry(1);
+        assertEquals(-400 , u1.getBalance());
+        assertEquals(f3, u1.getHistory().get(0));
+
     }
 
     @Test
@@ -76,5 +80,16 @@ public class UserTest {
         assertEquals(2000, u1.getBalance());
     }
 
+    @Test
+    void testsetBalance() {
+        u1.setBalancePlus(1000);
+        assertEquals(1000, u1.getBalance());
+    }
 
+    @Test
+    void testGetEntry() {
+        u1.addEntry(f1);
+        u1.addEntry(f2);
+        assertEquals(f1, u1.getEntry(1));
+    }
 }

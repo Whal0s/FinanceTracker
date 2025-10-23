@@ -16,6 +16,8 @@ public class FinanceTrackerApp {
     private List<User> users;
     private User selectedUser;
 
+    // MODIFIES: THIS
+    // EFFECTS: Initializes finance app with empty list of users and no selected user
     public FinanceTrackerApp() {
         users = new ArrayList<>();
         selectedUser = null;
@@ -413,6 +415,7 @@ public class FinanceTrackerApp {
             }
 
             if (index >= 1 && index <= selectedUser.getHistory().size()) {
+                
                 updateEntry(selectedUser.getEntry(index));
 
             } else {
@@ -433,6 +436,12 @@ public class FinanceTrackerApp {
     // EFFECTS: helper function to update the specific fields of the selected
     // financial entry
     public void updateEntry(FinancialEntry entry) {
+        if (entry.getType() == TransactionType.DEPOSIT) {
+            selectedUser.setBalancePlus(-(entry.getAmount()));
+        } else {
+            selectedUser.setBalancePlus(entry.getAmount());
+        }
+        
         System.out.println("Enter the new title:");
         String newTitle = input.next();
         entry.setTitle(newTitle);
@@ -442,6 +451,12 @@ public class FinanceTrackerApp {
 
         int newAmount = getUserAmount();
         entry.setAmount(newAmount);
+
+        if (newType == TransactionType.DEPOSIT) {
+            selectedUser.setBalancePlus(newAmount);
+        } else {
+            selectedUser.setBalancePlus(-newAmount);
+        }
 
         boolean newPlanned = wasPlanned();
         entry.setWasPlanned(newPlanned);
