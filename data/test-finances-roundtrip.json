@@ -1,0 +1,30 @@
+{"users": [
+      {
+            "overallBalance": 800,
+            "name": "Alice",
+            "history": [
+                  {
+                        "amount": 1000,
+                        "wasPlanned": true,
+                        "title": "Paycheck",
+                        "type": "DEPOSIT"
+                  },
+                  {
+                        "amount": 200,
+                        "wasPlanned": true,
+                        "title": "Groceries",
+                        "type": "WITHDRAWAL"
+                  }
+            ]
+      },
+      {
+            "overallBalance": -50,
+            "name": "Bob",
+            "history": [{
+                  "amount": 50,
+                  "wasPlanned": true,
+                  "title": "Ticket",
+                  "type": "WITHDRAWAL"
+            }]
+      }
+]}

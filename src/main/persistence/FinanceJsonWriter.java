@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Writes FinanceTrackerApp state to a JSON file.
+
 public class FinanceJsonWriter {
-    private static final int TAB = 4;
+    private static final int TAB = 6;
 
     private PrintWriter writer;
     private final String destination;

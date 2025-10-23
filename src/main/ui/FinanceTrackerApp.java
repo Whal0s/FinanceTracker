@@ -600,4 +600,9 @@ public class FinanceTrackerApp implements Writable {
 
         System.out.println("Entry updated.");
     }
+
+    // EFFECTS: Testing function constructor
+    public FinanceTrackerApp(List<User> seed) {
+        this.users = new ArrayList<>(seed);
+    }
 }

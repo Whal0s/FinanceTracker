@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "name": "Alice",
+      "overallBalance": 1200,
+      "history": [
+        { "title": "Paycheck", "type": "DEPOSIT", "amount": 1500, "wasPlanned": true },
+        { "title": "Groceries", "type": "WITHDRAWAL", "amount": 300, "wasPlanned": false }
+      ]
+    },
+    {
+      "name": "Bob",
+      "overallBalance": -75,
+      "history": [
+        { "title": "Late fee", "type": "WITHDRAWAL", "amount": 75, "wasPlanned": false }
+      ]
+    }
+  ]
+}
