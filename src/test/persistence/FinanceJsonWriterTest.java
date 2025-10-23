@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import model.FinancialEntry;
 import model.User;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.FinanceTrackerApp;
 
@@ -16,15 +18,12 @@ import ca.ubc.cs.ExcludeFromJacocoGeneratedReport;
 @ExcludeFromJacocoGeneratedReport
 public class FinanceJsonWriterTest extends FinanceJsonTest {
 
-    @Test
-    public void testWriterInvalidFile() {
-        FinanceJsonWriter writer = new FinanceJsonWriter("./data/\0illegal:name.json");
-        assertThrows(FileNotFoundException.class, writer::open);
-    }
+    private FinanceJsonWriter writer;
+    private FinanceJsonReader reader;
+    private FinanceTrackerApp app;
 
-    @Test
-    public void testWriterAndReaderRoundTrip() {
-        String path = "./data/test-finances-roundtrip.json";
+    @BeforeEach
+    void runBefore() {
         List<User> seed = new ArrayList<>();
 
         User alice = new User("Alice");
@@ -37,10 +36,21 @@ public class FinanceJsonWriterTest extends FinanceJsonTest {
         seed.add(alice);
         seed.add(bob);
 
-        FinanceTrackerApp app = new FinanceTrackerApp(seed);
+        app = new FinanceTrackerApp(seed);
+    }
+
+    @Test
+    public void testWriterInvalidFile() {
+        writer = new FinanceJsonWriter("./data/\0illegal:name.json");
+        assertThrows(FileNotFoundException.class, writer::open);
+    }
+
+    @Test
+    public void testWriterAndReaderRoundTrip() {
+        String path = "./data/test-finance-writer.json";
 
         // write
-        FinanceJsonWriter writer = new FinanceJsonWriter(path);
+        writer = new FinanceJsonWriter(path);
         try {
             writer.open();
             writer.write(app);
@@ -50,7 +60,7 @@ public class FinanceJsonWriterTest extends FinanceJsonTest {
         }
 
         // read back
-        FinanceJsonReader reader = new FinanceJsonReader(path);
+        reader = new FinanceJsonReader(path);
         try {
             List<User> loaded = reader.read();
 

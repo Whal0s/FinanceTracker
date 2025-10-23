@@ -14,15 +14,17 @@ import ca.ubc.cs.ExcludeFromJacocoGeneratedReport;
 @ExcludeFromJacocoGeneratedReport
 public class FinanceJsonReaderTest extends FinanceJsonTest {
 
+    private FinanceJsonReader reader;
+
     @Test
     public void testReaderNonExistentFile() {
-        FinanceJsonReader reader = new FinanceJsonReader("./data/no_such_file_finances.json");
+        reader = new FinanceJsonReader("./data/no_such_file_finances.json");
         assertThrows(IOException.class, reader::read);
     }
 
     @Test
     public void testReaderEmptyUsers() {
-        FinanceJsonReader reader = new FinanceJsonReader("./data/test-finances-empty.json");
+        reader = new FinanceJsonReader("./data/test-finances-empty.json");
         try {
             List<User> users = reader.read();
             assertNotNull(users);
@@ -34,7 +36,7 @@ public class FinanceJsonReaderTest extends FinanceJsonTest {
 
     @Test
     public void testReaderGeneralUsers() {
-        FinanceJsonReader reader = new FinanceJsonReader("./data/test-finances-general.json");
+        reader = new FinanceJsonReader("./data/test-finances-general.json");
         try {
             List<User> users = reader.read();
             assertEquals(2, users.size());

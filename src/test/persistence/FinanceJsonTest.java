@@ -16,7 +16,7 @@ public abstract class FinanceJsonTest {
     }
 
     protected void checkEntry(String title, FinancialEntry.TransactionType type, int amount, boolean wasPlanned,
-                              FinancialEntry actual) {
+            FinancialEntry actual) {
         assertEquals(title, actual.getTitle());
         assertEquals(type, actual.getType());
         assertEquals(amount, actual.getAmount());
