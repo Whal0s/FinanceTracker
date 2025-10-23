@@ -9,14 +9,35 @@ import model.User;
 import model.FinancialEntry;
 import model.FinancialEntry.TransactionType;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+
 // Represents the overall app system. Stores a list of users which you can perform operations on 
 // including viewing, delete or editing their financial entries
 @ExcludeFromJacocoGeneratedReport
-public class FinanceTrackerApp {
+public class FinanceTrackerApp implements Writable{
 
     private Scanner input;
     private List<User> users;
     private User selectedUser;
+
+
+    public List<User> getUsers() { 
+        return users; 
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject root = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (User u : users) {
+            arr.put(u.toJson());
+        }
+        root.put("users", arr);
+        return root;
+    }
 
     // MODIFIES: THIS
     // EFFECTS: Initializes finance app with empty list of users and no selected user

@@ -1,8 +1,11 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a singular financial entry that will be stored in a user's history.
 // A financial entry can be a deposit or withdrawal for a certain amount.
-public class FinancialEntry {
+public class FinancialEntry implements Writable {
 
     public enum TransactionType {
         DEPOSIT,
@@ -57,6 +60,28 @@ public class FinancialEntry {
 
     public void setWasPlanned(Boolean wasPlanned) {
         this.wasPlanned = wasPlanned;
+    }
+
+    @Override
+    // EFFECTS: returns this entry as JSON object
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("title", title);
+        json.put("type", type.name());
+        json.put("amount", amount);
+        json.put("wasPlanned", wasPlanned);
+        return json;
+    }
+
+    // REQUIRES: json has valid keys as written by toJson
+    // EFFECTS: builds a FinancialEntry from JSON
+    public static FinancialEntry fromJson(JSONObject json) {
+        String title = json.getString("title");
+        TransactionType type = TransactionType.valueOf(json.getString("type"));
+        int amount = json.getInt("amount");
+        boolean wasPlanned = json.getBoolean("wasPlanned");
+        FinancialEntry e = new FinancialEntry(title, type, amount, wasPlanned);
+        return e;
     }
 
 }

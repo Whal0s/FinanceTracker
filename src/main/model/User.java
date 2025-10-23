@@ -5,9 +5,13 @@ import java.util.List;
 
 import model.FinancialEntry.TransactionType;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a single user whose financial state we want to track. Made up of financial entries which 
 // contribute to the overall balance.
-public class User {
+public class User implements Writable {
 
     private String name;
     private int overallBalance;
@@ -23,6 +27,10 @@ public class User {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setBalance(int balance) {
+        this.overallBalance = balance;
     }
 
     public int getBalance() {
@@ -79,6 +87,39 @@ public class User {
 
         history.remove(index - 1);
 
+    }
+
+    @Override
+    // EFFECTS: returns this user as JSON object
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("overallBalance", overallBalance);
+
+        JSONArray hist = new JSONArray();
+        for (FinancialEntry e : history) {
+            hist.put(e.toJson());
+        }
+        json.put("history", hist);
+
+        return json;
+    }
+
+    // REQUIRES: json has keys "name","overallBalance","history"
+    // MODIFIES: none
+    // EFFECTS: constructs a User and fills history without double-applying balance
+    // updates
+    public static User fromJson(JSONObject json) {
+        User u = new User(json.getString("name"));
+        u.setBalance(json.getInt("overallBalance"));
+        JSONArray arr = json.getJSONArray("history");
+        for (Object o : arr) {
+            FinancialEntry fe = FinancialEntry.fromJson((JSONObject) o);
+            // IMPORTANT: add to history *without* re-updating balance,
+            // since we already set overallBalance from JSON.
+            u.getHistory().add(fe);
+        }
+        return u;
     }
 
 }
