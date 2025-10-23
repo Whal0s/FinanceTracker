@@ -1,32 +1,35 @@
 package persistence;
-import model.WorkRoom;
+
+import ui.FinanceTrackerApp;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
-import java.io.*;
-
-// Represents a writer that writes JSON representation of workroom to file
-public class JsonWriter {
+// Writes FinanceTrackerApp state to a JSON file.
+public class FinanceJsonWriter {
     private static final int TAB = 4;
-    private PrintWriter writer;
-    private String destination;
 
+    private PrintWriter writer;
+    private final String destination;
+
+    // REQUIRES: destination is a valid, writable path (e.g., "./data/finances.json")
     // EFFECTS: constructs writer to write to destination file
-    public JsonWriter(String destination) {
+    public FinanceJsonWriter(String destination) {
         this.destination = destination;
     }
 
     // MODIFIES: this
-    // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
-    // be opened for writing
+    // EFFECTS: opens writer; throws FileNotFoundException if destination cannot be opened
     public void open() throws FileNotFoundException {
         writer = new PrintWriter(new File(destination));
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
-    public void write(WorkRoom wr) {
-        JSONObject json = wr.toJson();
+    // EFFECTS: writes JSON representation of app to file
+    public void write(FinanceTrackerApp app) {
+        JSONObject json = app.toJson();
         saveToFile(json.toString(TAB));
     }
 

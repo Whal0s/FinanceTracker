@@ -1,5 +1,7 @@
 package ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,51 +13,104 @@ import model.FinancialEntry.TransactionType;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import persistence.Writable;
 
+import persistence.*;
 
 // Represents the overall app system. Stores a list of users which you can perform operations on 
 // including viewing, delete or editing their financial entries
 @ExcludeFromJacocoGeneratedReport
-public class FinanceTrackerApp implements Writable{
+public class FinanceTrackerApp implements Writable {
 
     private Scanner input;
     private List<User> users;
     private User selectedUser;
 
+    private static final String JSON_STORE = "./data/finances.json";
 
-    public List<User> getUsers() { 
-        return users; 
+    private persistence.FinanceJsonWriter jsonWriter;
+    private persistence.FinanceJsonReader jsonReader;
+
+    // MODIFIES: THIS
+    // EFFECTS: Initializes finance app with empty list of users and no selected
+    // user
+    public FinanceTrackerApp() {
+        users = new ArrayList<>();
+        selectedUser = null;
+        input = new Scanner(System.in);
+        initPersistence();
+
+        welcome();
     }
 
-    @Override
+    // MODIFIES: this
+    // EFFECTS: initializes persistence components
+    private void initPersistence() {
+        jsonWriter = new FinanceJsonWriter(JSON_STORE);
+        jsonReader = new FinanceJsonReader(JSON_STORE);
+    }
+
+    // EFFECTS: returns the entire visible app state as a JSON object
     public JSONObject toJson() {
         JSONObject root = new JSONObject();
         JSONArray arr = new JSONArray();
-        for (User u : users) {
-            arr.put(u.toJson());
+        for (User u : users) { // assumes you have: private List<User> users;
+            arr.put(u.toJson()); // relies on User.toJson()
         }
         root.put("users", arr);
         return root;
     }
 
-    // MODIFIES: THIS
-    // EFFECTS: Initializes finance app with empty list of users and no selected user
-    public FinanceTrackerApp() {
-        users = new ArrayList<>();
-        selectedUser = null;
-        input = new Scanner(System.in);
-
-        welcome();
+    // MODIFIES: file system
+    // EFFECTS: writes current app state to JSON_STORE; prints status in UI
+    private void saveFinanceApp() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(this); // calls toJson()
+            jsonWriter.close();
+            System.out.println("Saved finance data to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
     }
 
-    // EFFECTS: Main welcome function
+    // MODIFIES: this
+    // EFFECTS: loads users from JSON_STORE and replaces in-memory users; prints
+    // status in UI
+    private void loadFinanceApp() {
+        try {
+            List<User> loaded = jsonReader.read();
+            replaceUsers(loaded);
+            System.out.println("Loaded finance data from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: replaces current users collection with loaded list
+    private void replaceUsers(List<User> loaded) {
+        // Choose one based on how your app holds references:
+        // Option A (replace reference):
+        // this.users = new ArrayList<>(loaded);
+
+        // Option B (preserve existing list reference):
+        this.users.clear();
+        this.users.addAll(loaded);
+    }
+
+    // EFFECTS: Main welcome function; optionally offers to load on startup
     private void welcome() {
         System.out.println("------------------------------------------");
         System.out.println("Welcome to my finance tracker console app!");
         System.out.println("------------------------------------------");
-        mainMenu();
 
+        System.out.println("Would you like to load your data from file? (y/n)");
+        String ans = input.next().trim().toLowerCase();
+        if (ans.equals("y")) {
+            loadFinanceApp();
+        }
+
+        mainMenu();
     }
 
     // EFFECTS: Enter the main menu and show users if there are any
@@ -78,24 +133,83 @@ public class FinanceTrackerApp implements Writable{
         }
     }
 
-    // EFFECTS: Make a decision from the main menu to enter more functionality
+    // EFFECTS: shows menu choices and routes to processCommand
     private void mainMenuChoices() {
         System.out.println("------------------------------------------");
-        System.out.println("Do you want to (a) create a new user, (b) delete a user, (c) enter a user account?");
+        System.out.println("Do you want to (a) create a new user, (b) delete a user, (c) enter a user account,");
+        System.out.println("(s) save data to file, (l) load data from file, or (q) quit?");
 
-        String command = input.next();
-        command = command.toLowerCase();
+        String command = input.next().trim().toLowerCase();
+        processMainMenuCommand(command);
+    }
 
-        if (command.equals("a")) {
-            createUser();
-        } else if (command.equals("b")) {
-            deleteUser();
-        } else if (command.equals("c")) {
-            enterUserChoice();
+    // MODIFIES: this
+    // EFFECTS: processes the given command from the main menu
+    private void processMainMenuCommand(String command) {
+        if (isUserCommand(command)) {
+            handleUserCommand(command);
+        } else if (isAppCommand(command)) {
+            handleAppCommand(command);
         } else {
-            System.out.println("You have not inputed a valid command, please try again");
+            System.out.println("You have not input a valid command, please try again.");
             mainMenuChoices();
         }
+    }
+
+    // EFFECTS: returns true if the command is user-related
+    private boolean isUserCommand(String c) {
+        return c.equals("a") || c.equals("b") || c.equals("c");
+    }
+
+    // EFFECTS: returns true if the command is app-related
+    private boolean isAppCommand(String c) {
+        return c.equals("s") || c.equals("l") || c.equals("q");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: handle user-related commands
+    private void handleUserCommand(String command) {
+        switch (command) {
+            case "a":
+                createUser();
+                break;
+            case "b":
+                deleteUser();
+                break;
+            case "c":
+                enterUserChoice();
+                break;
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: handle app-related commands
+    private void handleAppCommand(String command) {
+        switch (command) {
+            case "s":
+                saveFinanceApp();
+                mainMenu();
+                break;
+            case "l":
+                loadFinanceApp();
+                mainMenu();
+                break;
+            case "q":
+                handleQuit();
+                break;
+        }
+    }
+
+    // MODIFIES: this (if user chooses to save)
+    // EFFECTS: offers to save, then exits main loop
+    private void handleQuit() {
+        System.out.println("Would you like to save before quitting? (y/n)");
+        String ans = input.next().trim().toLowerCase();
+        if (ans.equals("y")) {
+            saveFinanceApp();
+        }
+        System.out.println("Goodbye!");
+        // exit your run loop / return to end the program
     }
 
     // MODIFIES: THIS
@@ -438,7 +552,7 @@ public class FinanceTrackerApp implements Writable{
             }
 
             if (index >= 1 && index <= selectedUser.getHistory().size()) {
-                
+
                 updateEntry(selectedUser.getEntry(index));
 
             } else {
@@ -464,7 +578,7 @@ public class FinanceTrackerApp implements Writable{
         } else {
             selectedUser.setBalancePlus(entry.getAmount());
         }
-        
+
         System.out.println("Enter the new title:");
         String newTitle = input.next();
         entry.setTitle(newTitle);

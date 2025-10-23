@@ -1,0 +1,22 @@
+{"users": [
+    {
+        "overallBalance": -2000,
+        "name": "david",
+        "history": [{
+            "amount": 2000,
+            "wasPlanned": true,
+            "title": "hi",
+            "type": "WITHDRAWAL"
+        }]
+    },
+    {
+        "overallBalance": 0,
+        "name": "james",
+        "history": []
+    },
+    {
+        "overallBalance": 0,
+        "name": "jordan",
+        "history": []
+    }
+]}
