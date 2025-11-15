@@ -28,8 +28,8 @@ public class FinanceJsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of app to file
-    public void write(FinanceTrackerApp app) {
-        JSONObject json = app.toJson();
+    public void write(Writable w) {
+        JSONObject json = w.toJson();
         saveToFile(json.toString(TAB));
     }
 
