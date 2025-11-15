@@ -343,6 +343,77 @@ private static final String JSON_STORE = "./data/finances.json";
     }
     
 
-    
+    // MODIFIES: this
+    // EFFECTS: shows a multi-step dialog to create a new user and adds it to the
+    // list if the name is non-empty and not already present
+    @SuppressWarnings("methodlength")
+    private void addUserViaDialog() {
+        String name = JOptionPane.showInputDialog(
+                this,
+                "Enter new user's name:",
+                "Add User",
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (name == null) {
+            return; // user cancelled
+        }
+
+        name = name.trim();
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Name cannot be empty.",
+                    "Invalid Name",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        for (User u : users) {
+            if (u.getName().equals(name)) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "A user with that name already exists.",
+                        "Duplicate User",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        users.add(new User(name));
+        refreshUserList();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: deletes the currently selected user (if any) after confirmation
+    @SuppressWarnings("methodlength")
+    private void deleteSelectedUser() {
+        int index = userList.getSelectedIndex();
+        if (index < 0 || index >= users.size()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a user to delete.",
+                    "No User Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        User toDelete = users.get(index);
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to delete user \"" + toDelete.getName() + "\"?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            users.remove(index);
+            selectedUser = null;
+            refreshUserList();
+            entryListModel.clear();
+            displayedEntries.clear();
+            entryDetailsArea.setText("");
+            updateSelectedUserInfo();
+        }
+    }
+
     
 }
