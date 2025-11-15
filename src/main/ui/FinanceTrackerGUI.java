@@ -117,7 +117,7 @@ private static final String JSON_STORE = "./data/finances.json";
         addUserButton = new JButton("Add User");
         deleteUserButton = new JButton("Delete User");
 
-        addEntryButton = new JButton("Add Entry (X to Y)");
+        addEntryButton = new JButton("Add Entry");
         showUnplannedButton = new JButton("Show Unplanned Entries");
         showAllEntriesButton = new JButton("Show All Entries");
 
