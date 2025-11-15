@@ -26,7 +26,7 @@ public class BalanceChartPanel extends JPanel {
 
     // MODIFIES: this
     // EFFECTS: recomputes deposit and withdrawal totals from the given user's
-    //          entries and repaints the chart; if user is null, totals are set to 0
+    // entries and repaints the chart; if user is null, totals are set to 0
     public void updateData(User user) {
         depositTotal = 0;
         withdrawalTotal = 0;
@@ -54,8 +54,7 @@ public class BalanceChartPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
-        );
+                RenderingHints.VALUE_ANTIALIAS_ON);
 
         int margin = 20;
         int chartWidth = w - 2 * margin;

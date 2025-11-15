@@ -24,12 +24,14 @@ import java.util.List;
 // Allows the user to:
 // - view all entries (Xs) belonging to a selected user (Y),
 // - add an entry to the selected user,
+// - edit an existing entry for the selected user,
 // - display a subset of entries that satisfy a criterion (unplanned entries),
 // - save and load the state of the application to/from file, and
 // - view a simple visual component (bar chart) summarizing the selected user's data.
 @ExcludeFromJacocoGeneratedReport
 public class FinanceTrackerGUI extends JFrame implements Writable {
-private static final String JSON_STORE = "./data/finances.json";
+
+    private static final String JSON_STORE = "./data/finances.json";
 
     private List<User> users;
     private User selectedUser;
@@ -54,6 +56,7 @@ private static final String JSON_STORE = "./data/finances.json";
     private JButton addEntryButton;
     private JButton showUnplannedButton;
     private JButton showAllEntriesButton;
+    private JButton editEntryButton;
     private JButton saveButton;
     private JButton loadButton;
 
@@ -120,6 +123,7 @@ private static final String JSON_STORE = "./data/finances.json";
         addEntryButton = new JButton("Add Entry");
         showUnplannedButton = new JButton("Show Unplanned Entries");
         showAllEntriesButton = new JButton("Show All Entries");
+        editEntryButton = new JButton("Edit Selected Entry");
 
         saveButton = new JButton("Save");
         loadButton = new JButton("Load");
@@ -164,10 +168,11 @@ private static final String JSON_STORE = "./data/finances.json";
         entriesPanel.add(entryTopPanel, BorderLayout.NORTH);
 
         JPanel entryButtonsPanel = new JPanel();
-        entryButtonsPanel.setLayout(new GridLayout(1, 3, 5, 5));
+        entryButtonsPanel.setLayout(new GridLayout(1, 4, 5, 5));
         entryButtonsPanel.add(addEntryButton);
         entryButtonsPanel.add(showUnplannedButton);
         entryButtonsPanel.add(showAllEntriesButton);
+        entryButtonsPanel.add(editEntryButton);
 
         entriesPanel.add(entryButtonsPanel, BorderLayout.SOUTH);
 
@@ -241,6 +246,9 @@ private static final String JSON_STORE = "./data/finances.json";
         // Show all entries
         showAllEntriesButton.addActionListener(e -> showAllEntriesForSelectedUser());
 
+        // Edit selected entry
+        editEntryButton.addActionListener(e -> editSelectedEntryViaDialog());
+
         // Save and Load
         saveButton.addActionListener(e -> saveFinanceData());
         loadButton.addActionListener(e -> loadFinanceData());
@@ -278,9 +286,8 @@ private static final String JSON_STORE = "./data/finances.json";
     }
 
     // MODIFIES: this
-    // EFFECTS: shows all entries of the selected user in the entries list; if no
-    // user
-    // is selected, does nothing
+    // EFFECTS: shows all entries of the selected user in the entries list;
+    // if no user is selected, does nothing
     private void showAllEntriesForSelectedUser() {
         if (selectedUser == null) {
             return;
@@ -341,7 +348,6 @@ private static final String JSON_STORE = "./data/finances.json";
 
         chartPanel.updateData(selectedUser);
     }
-    
 
     // MODIFIES: this
     // EFFECTS: shows a multi-step dialog to create a new user and adds it to the
@@ -414,7 +420,6 @@ private static final String JSON_STORE = "./data/finances.json";
             updateSelectedUserInfo();
         }
     }
-
 
     // MODIFIES: this, selectedUser
     // EFFECTS: shows a multi-step dialog to add a new entry (X) to the selected
@@ -503,6 +508,131 @@ private static final String JSON_STORE = "./data/finances.json";
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // MODIFIES: this, selectedUser
+    // EFFECTS: edits the currently selected entry for the selected user by
+    // prompting the user for new values. If there is no selected user
+    // or no selected entry, shows a warning dialog.
+    @SuppressWarnings("methodlength")
+    private void editSelectedEntryViaDialog() {
+        if (selectedUser == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a user first.",
+                    "No User Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int index = entryList.getSelectedIndex();
+        if (index < 0 || index >= displayedEntries.size()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select an entry to edit.",
+                    "No Entry Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        FinancialEntry entry = displayedEntries.get(index);
+
+        // Remember old values so we can correct the balance
+        TransactionType oldType = entry.getType();
+        int oldAmount = entry.getAmount();
+        boolean oldPlanned = entry.getWasPlanned();
+        String oldTitle = entry.getTitle();
+
+        // --- Ask for new title ---
+        String newTitle = JOptionPane.showInputDialog(
+                this,
+                "Enter new title (leave blank to keep current):",
+                "Edit Entry",
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (newTitle == null) {
+            return; // cancelled
+        }
+
+        newTitle = newTitle.trim();
+        if (newTitle.isEmpty()) {
+            newTitle = oldTitle;
+        }
+
+        // --- Ask for new type ---
+        String[] typeOptions = { "Deposit", "Withdrawal" };
+        int defaultTypeIndex = (oldType == TransactionType.DEPOSIT) ? 0 : 1;
+
+        int typeChoice = JOptionPane.showOptionDialog(
+                this,
+                "Choose new type:",
+                "Edit Entry Type",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                typeOptions,
+                typeOptions[defaultTypeIndex]);
+
+        if (typeChoice != 0 && typeChoice != 1) {
+            return; // cancelled
+        }
+
+        TransactionType newType = (typeChoice == 0)
+                ? TransactionType.DEPOSIT
+                : TransactionType.WITHDRAWAL;
+
+        // --- Ask for new amount ---
+        Integer newAmount = askForAmount();
+        if (newAmount == null) {
+            return; // cancelled
+        }
+
+        // --- Ask for new planned/unplanned ---
+        String[] plannedOptions = { "Planned", "Unplanned" };
+        int defaultPlannedIndex = oldPlanned ? 0 : 1;
+
+        int plannedChoice = JOptionPane.showOptionDialog(
+                this,
+                "Was this planned?",
+                "Edit Planned Status",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                plannedOptions,
+                plannedOptions[defaultPlannedIndex]);
+
+        if (plannedChoice != 0 && plannedChoice != 1) {
+            return; // cancelled
+        }
+
+        boolean newPlanned = (plannedChoice == 0);
+
+        // --- Apply balance correction (mirror console updateEntry logic) ---
+        if (oldType == TransactionType.DEPOSIT) {
+            selectedUser.setBalancePlus(-oldAmount);
+        } else {
+            selectedUser.setBalancePlus(oldAmount);
+        }
+
+        // --- Write new values into the entry ---
+        entry.setTitle(newTitle);
+        entry.setType(newType);
+        entry.setAmount(newAmount);
+        entry.setWasPlanned(newPlanned);
+
+        if (newType == TransactionType.DEPOSIT) {
+            selectedUser.setBalancePlus(newAmount);
+        } else {
+            selectedUser.setBalancePlus(-newAmount);
+        }
+
+        updateSelectedUserInfo();
+        showAllEntriesForSelectedUser();
+        JOptionPane.showMessageDialog(
+                this,
+                "Entry updated.",
+                "Edit Entry",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
     // MODIFIES: this
     // EFFECTS: prompts user repeatedly for a valid non-negative integer amount,
     // or returns null if the user cancels the dialog
@@ -549,7 +679,6 @@ private static final String JSON_STORE = "./data/finances.json";
             }
         }
     }
-
 
     // MODIFIES: this
     // EFFECTS: displays the details of the given entry in the details area
@@ -675,7 +804,4 @@ private static final String JSON_STORE = "./data/finances.json";
     public List<User> getUsers() {
         return users;
     }
-
-
-    
 }
