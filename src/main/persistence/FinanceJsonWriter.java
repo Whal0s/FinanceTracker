@@ -1,6 +1,5 @@
 package persistence;
 
-import ui.FinanceTrackerApp;
 import org.json.JSONObject;
 
 import java.io.File;

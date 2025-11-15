@@ -254,6 +254,93 @@ private static final String JSON_STORE = "./data/finances.json";
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates labels and chart to reflect the currently selected user
+    private void updateSelectedUserInfo() {
+        if (selectedUser == null) {
+            selectedUserLabel.setText("No user selected");
+            balanceLabel.setText("Balance: 0");
+            chartPanel.updateData(null);
+        } else {
+            selectedUserLabel.setText("User: " + selectedUser.getName());
+            balanceLabel.setText("Balance: " + selectedUser.getBalance());
+            chartPanel.updateData(selectedUser);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: repopulates the user list model from the users field
+    private void refreshUserList() {
+        userListModel.clear();
+        for (User u : users) {
+            userListModel.addElement(u.getName());
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: shows all entries of the selected user in the entries list; if no
+    // user
+    // is selected, does nothing
+    private void showAllEntriesForSelectedUser() {
+        if (selectedUser == null) {
+            return;
+        }
+        displayedEntries.clear();
+        displayedEntries.addAll(selectedUser.getHistory());
+
+        entryListModel.clear();
+        int i = 1;
+        for (FinancialEntry fe : displayedEntries) {
+            String typeLabel = fe.getType() == TransactionType.DEPOSIT ? "Deposit" : "Withdrawal";
+            String plannedLabel = fe.getWasPlanned() ? "planned" : "unplanned";
+            String line = i + ". " + typeLabel + " | " + fe.getTitle()
+                    + " | amount: " + fe.getAmount() + " (" + plannedLabel + ")";
+            entryListModel.addElement(line);
+            i++;
+        }
+
+        chartPanel.updateData(selectedUser);
+        entryDetailsArea.setText("");
+    }
+
+    // MODIFIES: this
+    // EFFECTS: shows only unplanned entries of the selected user; if no user is
+    // selected, shows a message dialog
+    @SuppressWarnings("methodlength")
+    private void showUnplannedEntries() {
+        if (selectedUser == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a user first.",
+                    "No User Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        displayedEntries.clear();
+        entryListModel.clear();
+
+        int i = 1;
+        for (FinancialEntry fe : selectedUser.getHistory()) {
+            if (!fe.getWasPlanned()) {
+                displayedEntries.add(fe);
+                String typeLabel = fe.getType() == TransactionType.DEPOSIT ? "Deposit" : "Withdrawal";
+                String plannedLabel = "unplanned";
+                String line = i + ". " + typeLabel + " | " + fe.getTitle()
+                        + " | amount: " + fe.getAmount() + " (" + plannedLabel + ")";
+                entryListModel.addElement(line);
+                i++;
+            }
+        }
+
+        if (displayedEntries.isEmpty()) {
+            entryDetailsArea.setText("No unplanned entries for this user.");
+        } else {
+            entryDetailsArea.setText("Showing unplanned entries for " + selectedUser.getName() + ".");
+        }
+
+        chartPanel.updateData(selectedUser);
+    }
     
 
     
