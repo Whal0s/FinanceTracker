@@ -551,6 +551,131 @@ private static final String JSON_STORE = "./data/finances.json";
     }
 
 
+    // MODIFIES: this
+    // EFFECTS: displays the details of the given entry in the details area
+    private void showEntryDetails(FinancialEntry entry) {
+        if (entry == null) {
+            entryDetailsArea.setText("");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Title: ").append(entry.getTitle()).append("\n");
+
+        String typeLabel = entry.getType() == TransactionType.DEPOSIT ? "Deposit" : "Withdrawal";
+        sb.append("Type: ").append(typeLabel).append("\n");
+
+        sb.append("Amount: ").append(entry.getAmount()).append("\n");
+
+        String plannedLabel = entry.getWasPlanned() ? "Planned" : "Unplanned";
+        sb.append("This entry was ").append(plannedLabel.toLowerCase()).append(".");
+
+        entryDetailsArea.setText(sb.toString());
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves the current state of the application to JSON_STORE and
+    // shows a dialog indicating success or failure
+    private void saveFinanceData() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(this); // uses toJson()
+            jsonWriter.close();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Saved finance data to " + JSON_STORE,
+                    "Save Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Unable to write to file: " + JSON_STORE,
+                    "Save Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the state of the application from JSON_STORE and updates
+    // the UI to reflect the loaded data; if unable to read, shows an error
+    private void loadFinanceData() {
+        try {
+            List<User> loaded = jsonReader.read();
+            users = new ArrayList<>(loaded);
+            selectedUser = null;
+            refreshUserList();
+            entryListModel.clear();
+            displayedEntries.clear();
+            entryDetailsArea.setText("");
+            updateSelectedUserInfo();
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Loaded finance data from " + JSON_STORE,
+                    "Load Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Unable to read from file: " + JSON_STORE,
+                    "Load Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: prompts the user to optionally save before closing the window,
+    // then disposes the frame and exits
+    private void handleWindowClosing() {
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Would you like to save before exiting?",
+                "Save Before Exit",
+                JOptionPane.YES_NO_CANCEL_OPTION);
+
+        if (result == JOptionPane.CANCEL_OPTION) {
+            return;
+        }
+
+        if (result == JOptionPane.YES_OPTION) {
+            saveFinanceData();
+        }
+
+        dispose();
+        System.exit(0);
+    }
+
+    // EFFECTS: returns the entire visible GUI state as a JSON object, containing
+    // an array of the users and their data
+    @Override
+    public JSONObject toJson() {
+        JSONObject root = new JSONObject();
+        JSONArray arr = new JSONArray();
+        for (User u : users) {
+            arr.put(u.toJson());
+        }
+        root.put("users", arr);
+        return root;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the list of users used by the GUI; primarily intended for
+    // testing
+    public void setUsers(List<User> users) {
+        this.users = new ArrayList<>(users);
+        selectedUser = null;
+        refreshUserList();
+        entryListModel.clear();
+        displayedEntries.clear();
+        entryDetailsArea.setText("");
+        updateSelectedUserInfo();
+    }
+
+    // EFFECTS: returns the current list of users; primarily intended for testing
+    public List<User> getUsers() {
+        return users;
+    }
+
 
     
 }
