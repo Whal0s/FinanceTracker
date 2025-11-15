@@ -38,8 +38,10 @@ As a computer science and business combined major, I have been learning financia
 
 # Instructions for End User
 - You can view the panel that displays the Entries that have already been added to the Users on right side of the interface.
-- You can generate the first required action related to the user story "adding entries to a user in the app" by pressing clicking the desired user and pressing the "add entry" button
+- You can generate the first required action related to the user story "adding entries to a user in the app" by  clicking the desired user and pressing the "add entry" button.
 - You can generate the second required action related to the user story "view a list of all deposits" by simply clicking your desired user and looking in the middle panel.
-- You can locate my visual component by looking to the right hand side to see a graph showcasing the total deposits / withdrawals
-- You can save the state of my application by pressing the save button on the bottom right
-- You can reload the state of my application by pressing the load button on the bottom right
+- You can generate the third required action related to the user story "to mark entries as planned or unplanned" by clicking the desired user and pressing the "add entry" button. You will be prompted to choose your planned state for the entry.
+- You can generate the fifth required action related to the user story "see the amount each financial entry is increased or decreased the user's overal balance" via the entry panel in the middle.
+- You can locate my visual component by looking to the right hand side to see a graph showcasing the total deposits / withdrawals.
+- You can save the state of my application by pressing the save button on the bottom right.
+- You can reload the state of my application by pressing the load button on the bottom right.
