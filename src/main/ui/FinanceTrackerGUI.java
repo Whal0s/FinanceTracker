@@ -415,5 +415,142 @@ private static final String JSON_STORE = "./data/finances.json";
         }
     }
 
+
+    // MODIFIES: this, selectedUser
+    // EFFECTS: shows a multi-step dialog to add a new entry (X) to the selected
+    // user (Y); if no user is selected, shows a warning
+    @SuppressWarnings("methodlength")
+    private void addEntryViaDialog() {
+        if (selectedUser == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a user first.",
+                    "No User Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String title = JOptionPane.showInputDialog(
+                this,
+                "Enter entry title:",
+                "New Entry",
+                JOptionPane.PLAIN_MESSAGE);
+
+        if (title == null) {
+            return; // user cancelled
+        }
+
+        title = title.trim();
+        if (title.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Title cannot be empty.",
+                    "Invalid Title",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String[] typeOptions = { "Deposit", "Withdrawal" };
+        int typeChoice = JOptionPane.showOptionDialog(
+                this,
+                "Is this a deposit or withdrawal?",
+                "Entry Type",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                typeOptions,
+                typeOptions[0]);
+
+        if (typeChoice != 0 && typeChoice != 1) {
+            return; // cancelled
+        }
+
+        TransactionType type = (typeChoice == 0)
+                ? TransactionType.DEPOSIT
+                : TransactionType.WITHDRAWAL;
+
+        Integer amount = askForAmount();
+        if (amount == null) {
+            return; // cancelled
+        }
+
+        String[] plannedOptions = { "Planned", "Unplanned" };
+        int plannedChoice = JOptionPane.showOptionDialog(
+                this,
+                "Was this planned?",
+                "Planned?",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                plannedOptions,
+                plannedOptions[0]);
+
+        if (plannedChoice != 0 && plannedChoice != 1) {
+            return; // cancelled
+        }
+
+        boolean wasPlanned = (plannedChoice == 0);
+
+        FinancialEntry entry = new FinancialEntry(title, type, amount, wasPlanned);
+        selectedUser.addEntry(entry);
+
+        updateSelectedUserInfo();
+        showAllEntriesForSelectedUser();
+        JOptionPane.showMessageDialog(
+                this,
+                "Entry added.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: prompts user repeatedly for a valid non-negative integer amount,
+    // or returns null if the user cancels the dialog
+    @SuppressWarnings("methodlength")
+    private Integer askForAmount() {
+        while (true) {
+            String input = JOptionPane.showInputDialog(
+                    this,
+                    "Enter amount (whole number, >= 0):",
+                    "Entry Amount",
+                    JOptionPane.PLAIN_MESSAGE);
+
+            if (input == null) {
+                return null;
+            }
+
+            input = input.trim();
+            if (input.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Amount cannot be empty.",
+                        "Invalid Amount",
+                        JOptionPane.ERROR_MESSAGE);
+                continue;
+            }
+
+            try {
+                int amt = Integer.parseInt(input);
+                if (amt < 0) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Amount cannot be negative.",
+                            "Invalid Amount",
+                            JOptionPane.ERROR_MESSAGE);
+                    continue;
+                }
+                return amt;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please enter a valid whole number.",
+                        "Invalid Amount",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
+
     
 }
