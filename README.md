@@ -62,3 +62,5 @@ Added withdrawal 'payday' for amount 1000 to user jordan
 
 Note: Event Logs only work with GUI Version of my financial app (not the old console based version as this was not specified to 
 update in edX instructions).
+
+a
