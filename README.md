@@ -60,5 +60,5 @@ Deleted deposit 'deletable entry' for amount 1 from user adam
 Thu Nov 27 14:45:23 PST 2025
 Added withdrawal 'payday' for amount 1000 to user jordan
 
-Note: Logs only work with GUI Version of my financial app (not the old console based version as this was not specified to 
+Note: Event Logs only work with GUI Version of my financial app (not the old console based version as this was not specified to 
 update in edX instructions).
