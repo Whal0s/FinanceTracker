@@ -1,22 +1,31 @@
 {"users": [
       {
-            "overallBalance": -5000,
-            "name": "userA",
-            "history": [{
-                  "amount": 5000,
-                  "wasPlanned": true,
-                  "title": "blubber",
-                  "type": "WITHDRAWAL"
-            }]
+            "overallBalance": 5000,
+            "name": "Jordan",
+            "history": [
+                  {
+                        "amount": 2000,
+                        "wasPlanned": false,
+                        "title": "Rent",
+                        "type": "WITHDRAWAL"
+                  },
+                  {
+                        "amount": 5000,
+                        "wasPlanned": true,
+                        "title": "Payday",
+                        "type": "DEPOSIT"
+                  },
+                  {
+                        "amount": 2000,
+                        "wasPlanned": false,
+                        "title": "Loan",
+                        "type": "DEPOSIT"
+                  }
+            ]
       },
       {
-            "overallBalance": 5000,
-            "name": "userB",
-            "history": [{
-                  "amount": 5000,
-                  "wasPlanned": false,
-                  "title": "rent",
-                  "type": "DEPOSIT"
-            }]
+            "overallBalance": 0,
+            "name": "Adam",
+            "history": []
       }
 ]}

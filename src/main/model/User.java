@@ -72,6 +72,13 @@ public class User implements Writable {
             this.overallBalance -= entry.getAmount();
         }
         this.history.add(entry);
+
+        // add tto event log
+        EventLog.getInstance().logEvent(new Event(
+                "Added " + entry.getType().name().toLowerCase()
+                        + " '" + entry.getTitle()
+                        + "' for amount " + entry.getAmount()
+                        + " to user " + name));
     }
 
     // REQUIRES index must be not be a number bigger than history.size or less than
@@ -79,6 +86,9 @@ public class User implements Writable {
     // MODIFIES: THIS
     // EFFECTS: delete the entry at the index of history
     public void deleteEntry(int index) {
+
+        FinancialEntry entry = history.get(index - 1);
+        
         if (history.get(index - 1).getType() == TransactionType.DEPOSIT) {
             this.overallBalance -= history.get(index - 1).getAmount();
         } else {
@@ -86,6 +96,13 @@ public class User implements Writable {
         }
 
         history.remove(index - 1);
+
+        // add removal to event log
+        EventLog.getInstance().logEvent(new Event(
+                "Deleted " + entry.getType().name().toLowerCase()
+                        + " '" + entry.getTitle()
+                        + "' for amount " + entry.getAmount()
+                        + " from user " + name));
 
     }
 

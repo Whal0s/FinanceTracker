@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import persistence.FinanceJsonReader;
 import persistence.FinanceJsonWriter;
 import persistence.Writable;
+import model.Event;
+import model.EventLog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -768,6 +770,10 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
 
         if (result == JOptionPane.YES_OPTION) {
             saveFinanceData();
+        }
+
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event);
         }
 
         dispose();
