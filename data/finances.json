@@ -1,31 +1,36 @@
 {"users": [
       {
-            "overallBalance": 5000,
-            "name": "Jordan",
+            "overallBalance": -1000,
+            "name": "jordan",
+            "history": [{
+                  "amount": 1000,
+                  "wasPlanned": false,
+                  "title": "payday",
+                  "type": "WITHDRAWAL"
+            }]
+      },
+      {
+            "overallBalance": 2300,
+            "name": "adam",
             "history": [
                   {
-                        "amount": 2000,
+                        "amount": 3000,
+                        "wasPlanned": true,
+                        "title": "payday",
+                        "type": "DEPOSIT"
+                  },
+                  {
+                        "amount": 500,
                         "wasPlanned": false,
-                        "title": "Rent",
+                        "title": "car crash",
                         "type": "WITHDRAWAL"
                   },
                   {
-                        "amount": 5000,
+                        "amount": 200,
                         "wasPlanned": true,
-                        "title": "Payday",
-                        "type": "DEPOSIT"
-                  },
-                  {
-                        "amount": 2000,
-                        "wasPlanned": false,
-                        "title": "Loan",
-                        "type": "DEPOSIT"
+                        "title": "groceries",
+                        "type": "WITHDRAWAL"
                   }
             ]
-      },
-      {
-            "overallBalance": 0,
-            "name": "Adam",
-            "history": []
       }
 ]}

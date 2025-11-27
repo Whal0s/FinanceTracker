@@ -59,6 +59,7 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
     private JButton showUnplannedButton;
     private JButton showAllEntriesButton;
     private JButton editEntryButton;
+    private JButton deleteEntryButton;      // NEW: delete entry button
     private JButton saveButton;
     private JButton loadButton;
 
@@ -126,6 +127,7 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
         showUnplannedButton = new JButton("Show Unplanned Entries");
         showAllEntriesButton = new JButton("Show All Entries");
         editEntryButton = new JButton("Edit Selected Entry");
+        deleteEntryButton = new JButton("Delete Selected Entry");   // NEW
 
         saveButton = new JButton("Save");
         loadButton = new JButton("Load");
@@ -170,11 +172,12 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
         entriesPanel.add(entryTopPanel, BorderLayout.NORTH);
 
         JPanel entryButtonsPanel = new JPanel();
-        entryButtonsPanel.setLayout(new GridLayout(1, 4, 5, 5));
+        entryButtonsPanel.setLayout(new GridLayout(1, 5, 5, 5));   // CHANGED: 4 -> 5
         entryButtonsPanel.add(addEntryButton);
         entryButtonsPanel.add(showUnplannedButton);
         entryButtonsPanel.add(showAllEntriesButton);
         entryButtonsPanel.add(editEntryButton);
+        entryButtonsPanel.add(deleteEntryButton);                  // NEW
 
         entriesPanel.add(entryButtonsPanel, BorderLayout.SOUTH);
 
@@ -250,6 +253,9 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
 
         // Edit selected entry
         editEntryButton.addActionListener(e -> editSelectedEntryViaDialog());
+
+        // Delete selected entry
+        deleteEntryButton.addActionListener(e -> deleteSelectedEntryViaDialog());   // NEW
 
         // Save and Load
         saveButton.addActionListener(e -> saveFinanceData());
@@ -632,6 +638,70 @@ public class FinanceTrackerGUI extends JFrame implements Writable {
                 this,
                 "Entry updated.",
                 "Edit Entry",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    // MODIFIES: this, selectedUser
+    // EFFECTS: deletes the currently selected entry for the selected user after confirmation.
+    //          If there is no selected user or no selected entry, shows a warning dialog.
+    @SuppressWarnings("methodlength")
+    private void deleteSelectedEntryViaDialog() {
+        if (selectedUser == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select a user first.",
+                    "No User Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int index = entryList.getSelectedIndex();
+        if (index < 0 || index >= displayedEntries.size()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select an entry to delete.",
+                    "No Entry Selected",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        FinancialEntry entry = displayedEntries.get(index);
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to delete this entry?\n\n"
+                        + "Title: " + entry.getTitle()
+                        + "\nAmount: " + entry.getAmount(),
+                "Confirm Delete Entry",
+                JOptionPane.YES_NO_OPTION);
+
+        if (result != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // Find this entry in the user's full history list
+        int historyIndex = selectedUser.getHistory().indexOf(entry);
+
+        if (historyIndex >= 0) {
+            // deleteEntry in User is 1-based index, so add 1
+            selectedUser.deleteEntry(historyIndex + 1);
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Could not find this entry in the user's history.",
+                    "Delete Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        showAllEntriesForSelectedUser();
+        updateSelectedUserInfo();
+        entryDetailsArea.setText("");
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Entry deleted.",
+                "Delete Entry",
                 JOptionPane.INFORMATION_MESSAGE);
     }
 

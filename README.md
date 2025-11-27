@@ -45,3 +45,20 @@ As a computer science and business combined major, I have been learning financia
 - You can locate my visual component by looking to the right hand side to see a graph showcasing the total deposits / withdrawals.
 - You can save the state of my application by pressing the save button on the bottom right.
 - You can reload the state of my application by pressing the load button on the bottom right.
+
+## PHASE 4 TASK 2:
+Thu Nov 27 14:44:21 PST 2025
+Added deposit 'payday' for amount 3000 to user adam
+Thu Nov 27 14:44:31 PST 2025
+Added withdrawal 'car crash' for amount 500 to user adam
+Thu Nov 27 14:44:43 PST 2025
+Added withdrawal 'groceries' for amount 200 to user adam
+Thu Nov 27 14:44:58 PST 2025
+Added deposit 'deletable entry' for amount 1 to user adam
+Thu Nov 27 14:45:05 PST 2025
+Deleted deposit 'deletable entry' for amount 1 from user adam
+Thu Nov 27 14:45:23 PST 2025
+Added withdrawal 'payday' for amount 1000 to user jordan
+
+Note: Logs only work with GUI Version of my financial app (not the old console based version as this was not specified to 
+update in edX instructions).
