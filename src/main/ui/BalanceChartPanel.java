@@ -45,53 +45,96 @@ public class BalanceChartPanel extends JPanel {
     }
 
     // EFFECTS: paints a simple bar chart showing deposit vs withdrawal totals
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        Graphics2D g2 = (Graphics2D) g;
+        setupRendering(g2);
+
         int w = getWidth();
         int h = getHeight();
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-
         int margin = 20;
+        int max = Math.max(depositTotal, withdrawalTotal);
+
+        if (max == 0) {
+            drawNoDataMessage(g2, margin, h);
+            return;
+        }
+
         int chartWidth = w - 2 * margin;
         int chartHeight = h - 2 * margin;
 
-        // Draw axes
+        drawAxes(g2, w, h, margin);
+        drawBars(g2, h, margin, chartWidth, chartHeight, max);
+    }
+
+    private void setupRendering(Graphics2D g2) {
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+    private void drawNoDataMessage(Graphics2D g2, int margin, int h) {
+        g2.drawString("No data to display", margin + 10, h / 2);
+    }
+
+    private void drawAxes(Graphics2D g2, int w, int h, int margin) {
         g2.drawLine(margin, h - margin, margin, margin);
         g2.drawLine(margin, h - margin, w - margin, h - margin);
+    }
 
-        int max = Math.max(depositTotal, withdrawalTotal);
-        if (max == 0) {
-            g2.drawString("No data to display", margin + 10, h / 2);
-            return;
-        }
+    private void drawBars(Graphics2D g2,
+            int h,
+            int margin,
+            int chartWidth,
+            int chartHeight,
+            int max) {
 
         int barWidth = chartWidth / 4;
         int depositX = margin + barWidth;
         int withdrawalX = margin + 2 * barWidth;
 
-        int depositBarHeight = (int) ((double) depositTotal / max * (chartHeight - 20));
-        int withdrawalBarHeight = (int) ((double) withdrawalTotal / max * (chartHeight - 20));
+        int depositBarHeight = computeBarHeight(depositTotal, max, chartHeight);
+        int withdrawalBarHeight = computeBarHeight(withdrawalTotal, max, chartHeight);
 
-        int depositY = h - margin - depositBarHeight;
-        int withdrawalY = h - margin - withdrawalBarHeight;
+        int depositY = computeBarY(h, margin, depositBarHeight);
+        int withdrawalY = computeBarY(h, margin, withdrawalBarHeight);
 
-        // Deposit bar
+        drawDepositBar(g2, barWidth, depositX, depositY, depositBarHeight);
+        drawWithdrawalBar(g2, barWidth, withdrawalX, withdrawalY, withdrawalBarHeight);
+    }
+
+    private int computeBarHeight(int total, int max, int chartHeight) {
+        return (int) ((double) total / max * (chartHeight - 20));
+    }
+
+    private int computeBarY(int h, int margin, int barHeight) {
+        return h - margin - barHeight;
+    }
+
+    private void drawDepositBar(Graphics2D g2,
+            int barWidth,
+            int x,
+            int y,
+            int height) {
+
         g2.setColor(new Color(76, 175, 80)); // green-ish
-        g2.fillRect(depositX, depositY, barWidth, depositBarHeight);
+        g2.fillRect(x, y, barWidth, height);
         g2.setColor(Color.BLACK);
-        g2.drawRect(depositX, depositY, barWidth, depositBarHeight);
-        g2.drawString("Deposits: " + depositTotal, depositX - 10, depositY - 5);
+        g2.drawRect(x, y, barWidth, height);
+        g2.drawString("Deposits: " + depositTotal, x - 10, y - 5);
+    }
 
-        // Withdrawal bar
+    private void drawWithdrawalBar(Graphics2D g2,
+            int barWidth,
+            int x,
+            int y,
+            int height) {
+
         g2.setColor(new Color(244, 67, 54)); // red-ish
-        g2.fillRect(withdrawalX, withdrawalY, barWidth, withdrawalBarHeight);
+        g2.fillRect(x, y, barWidth, height);
         g2.setColor(Color.BLACK);
-        g2.drawRect(withdrawalX, withdrawalY, barWidth, withdrawalBarHeight);
-        g2.drawString("Withdrawals: " + withdrawalTotal, withdrawalX - 20, withdrawalY - 5);
+        g2.drawRect(x, y, barWidth, height);
+        g2.drawString("Withdrawals: " + withdrawalTotal, x - 20, y - 5);
     }
 }
