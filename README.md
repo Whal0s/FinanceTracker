@@ -64,7 +64,7 @@ Note: Event Logs only work with GUI Version of my financial app (not the old con
 update in edX instructions).
 
 ## Phase 4: Task 3
-Potential Refractoring Idea:
+Potential Refractoring Idea:3
 If I were to refractor this project, I would potentially consider abstracting my entire financial app into its own "model" class. Currently users are stored in Finance Tracker GUI file part of the ui package. This means a lot of the user treatment and functionality is being done in the UI package which is unintuitve; so it would honestly make more sense to have abstracted the app into its own data type and have the ui file just make calls to the app. Additionally, this reduce the length of the very large Finance Tracker GUI file.
 
 To complete this refractoring, I would create this new class which stores a list of users. I would have to create various public facing functions that the UI app could call. This would also potentially allow the possibility of multiple GUIs being opened as each one is dealing with their own app data in a very clean manner.
