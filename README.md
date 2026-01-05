@@ -46,7 +46,7 @@ As a computer science and business combined major, I have been learning financia
 - You can save the state of my application by pressing the save button on the bottom right.
 - You can reload the state of my application by pressing the load button on the bottom right.
 
-## PHASE 4 TASK 2:
+## PHASE 4 TASK 2: Changed
 Thu Nov 27 14:44:21 PST 2025
 Added deposit 'payday' for amount 3000 to user adam
 Thu Nov 27 14:44:31 PST 2025
